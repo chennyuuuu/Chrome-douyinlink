@@ -1,0 +1,18 @@
+{
+  "// 飞书应用配置": "以下是飞书应用的基本配置信息",
+  "appId": "cli_a74b6f55ca79901c",
+  "appSecret": "5ucmhQqmLF8TcQ08xvsYuntxO0f3m7A7",
+
+  "// 多维表格配置": "以下是飞书多维表格的相关配置",
+  "baseUrl": "https://open.feishu.cn/open-apis",
+  "tableConfig": {
+    "appToken": "Sm0wbOkRwaCpKNsAlFpcVHSWnih",
+    "tableId": "tblxQ4IhUg3RouU0",
+    "fields": {
+      "链接": {
+        "type": "url",
+        "description": "视频链接字段，类型为超链接，数据格式为URL格式"
+      }
+    }
+  }
+}
