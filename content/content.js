@@ -98,6 +98,73 @@ async function extractVideoLinks(likeThreshold) {
       
       console.log(`解析后的点赞数：${likeCount}`);
       
+      // 获取评论数（支持多种选择器）
+      const commentSelectors = [
+        '.comment-count',
+        '[data-e2e="comment-count"]',
+        '.author-card-user-video-comment .video-count',
+        '.author-card-user-video-comment .BgCg_ebQ',
+        // 新增更多可能的评论数选择器
+        '.semi-icon-comment + .BgCg_ebQ',
+        '.semi-icon-comment + span',
+        '[class*="comment"] .BgCg_ebQ',
+        '[class*="Comment"] .BgCg_ebQ'
+      ];
+      
+      let commentElement = null;
+      for (const selector of commentSelectors) {
+        commentElement = element.querySelector(selector);
+        if (commentElement) {
+          console.log(`找到评论数元素，使用选择器: ${selector}`);
+          break;
+        }
+      }
+      
+      if (!commentElement) {
+        console.log('未找到评论数元素，尝试查找父元素...');
+        // 尝试在父元素中查找
+        const parentElement = element.closest('div');
+        for (const selector of commentSelectors) {
+          commentElement = parentElement?.querySelector(selector);
+          if (commentElement) {
+            console.log(`在父元素中找到评论数元素，使用选择器: ${selector}`);
+            break;
+          }
+        }
+        
+        // 如果仍未找到，尝试查找更广泛的范围
+        if (!commentElement && parentElement) {
+          const grandParentElement = parentElement.closest('div');
+          for (const selector of commentSelectors) {
+            commentElement = grandParentElement?.querySelector(selector);
+            if (commentElement) {
+              console.log(`在祖父元素中找到评论数元素，使用选择器: ${selector}`);
+              break;
+            }
+          }
+        }
+      }
+      
+      // 默认评论数为0
+      let commentCount = 0;
+      
+      if (commentElement) {
+        const commentText = commentElement.textContent.trim();
+        console.log(`原始评论文本：${commentText}`);
+        
+        // 处理可能的单位（万、w等）
+        if (commentText.includes('万') || commentText.toLowerCase().includes('w')) {
+          const num = parseFloat(commentText.replace(/[^0-9.]/g, ''));
+          commentCount = Math.floor(num * 10000);
+        } else {
+          commentCount = parseInt(commentText.replace(/[^0-9]/g, ''));
+        }
+        
+        console.log(`解析后的评论数：${commentCount}`);
+      } else {
+        console.log('未找到评论数元素，默认为0');
+      }
+      
       // 检查点赞数是否满足阈值
       if (likeCount >= likeThreshold) {
         const videoId = element.getAttribute('href');
@@ -126,9 +193,11 @@ async function extractVideoLinks(likeThreshold) {
         if (!videos.some(v => v.url === fullUrl)) {
           videos.push({
             url: fullUrl,
-            title: title
+            title: title,
+            likes: likeCount,
+            commentCount: commentCount
           });
-          console.log(`添加视频：${title || fullUrl}`);
+          console.log(`添加视频：${title || fullUrl}，点赞数：${likeCount}，评论数：${commentCount}`);
         }
       }
     } catch (error) {

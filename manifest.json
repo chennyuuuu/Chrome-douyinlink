@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "抖音视频链接提取器",
-  "version": "1.0",
+  "version": "1.0.1",
   "description": "一键提取抖音博主主页的视频链接，支持点赞数筛选",
   "permissions": [
     "activeTab",

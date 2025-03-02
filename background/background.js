@@ -91,7 +91,9 @@ async function writeToFeishuTable(videos) {
             '链接': {
               text: video.title || '抖音视频',
               link: video.url
-            }
+            },
+            '点赞数': parseInt(video.likes) || 0,
+            '评论数': parseInt(video.commentCount) || 0
           }
         }))
       })
