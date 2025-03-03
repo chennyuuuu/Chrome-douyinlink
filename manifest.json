@@ -6,7 +6,8 @@
   "permissions": [
     "activeTab",
     "scripting",
-    "downloads"
+    "downloads",
+    "storage"
   ],
   "host_permissions": [
     "https://*.douyin.com/*",
@@ -20,6 +21,7 @@
       "128": "images/icon128.png"
     }
   },
+  "options_page": "options/options.html",
   "content_scripts": [{
     "matches": ["https://*.douyin.com/*"],
     "js": ["content/content.js"]

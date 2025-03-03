@@ -20,13 +20,34 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 });
 
 // 从配置文件中读取飞书应用凭据
+// 从Chrome存储中读取飞书配置
 let feishuConfig = null;
 
 // 加载飞书配置
 async function loadFeishuConfig() {
   try {
-    const response = await fetch(chrome.runtime.getURL('config/feishu.json'));
-    feishuConfig = await response.json();
+    const config = await chrome.storage.sync.get([
+      'feishuAppId',
+      'feishuAppSecret',
+      'feishuBaseUrl',
+      'feishuAppToken',
+      'feishuTableId'
+    ]);
+
+    // 验证配置完整性
+    if (!config.feishuAppId || !config.feishuAppSecret || !config.feishuAppToken || !config.feishuTableId) {
+      throw new Error('飞书配置不完整，请先完成配置');
+    }
+
+    feishuConfig = {
+      appId: config.feishuAppId,
+      appSecret: config.feishuAppSecret,
+      baseUrl: config.feishuBaseUrl || 'https://open.feishu.cn/open-apis',
+      tableConfig: {
+        appToken: config.feishuAppToken,
+        tableId: config.feishuTableId
+      }
+    };
   } catch (error) {
     console.error('加载飞书配置失败:', error);
     throw error;
@@ -43,12 +64,8 @@ async function getFeiShuToken() {
     const response = await fetch(`${feishuConfig.baseUrl}/auth/v3/tenant_access_token/internal`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type'
+        'Content-Type': 'application/json'
       },
-      mode: 'cors',
       body: JSON.stringify({
         'app_id': feishuConfig.appId,
         'app_secret': feishuConfig.appSecret
@@ -68,7 +85,7 @@ async function getFeiShuToken() {
 }
 
 // 写入数据到飞书多维表格
-async function writeToFeishuTable(videos) {
+async function writeToFeishuTable(contents) {
   if (!feishuConfig) {
     await loadFeishuConfig();
   }
@@ -79,21 +96,19 @@ async function writeToFeishuTable(videos) {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        'Content-Type': 'application/json'
       },
-      mode: 'cors',
       body: JSON.stringify({
-        records: videos.map(video => ({
+        records: contents.map(content => ({
           fields: {
             '链接': {
-              text: video.title || '抖音视频',
-              link: video.url
+              text: content.title || (content.type === 'video' ? '抖音视频' : '抖音图文'),
+              link: content.url
             },
-            '点赞数': parseInt(video.likes) || 0,
-            '评论数': parseInt(video.commentCount) || 0
+            '点赞数': parseInt(content.likes) || 0,
+            '评论数': parseInt(content.comments) || 0,
+            '类型': content.type === 'video' ? '视频' : '图文',
+            '发布时间': content.publishTime || ''
           }
         }))
       })
@@ -122,4 +137,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 });
 
 // 初始化时加载配置
-loadFeishuConfig();
+loadFeishuConfig().catch(error => {
+  console.warn('初始化飞书配置失败:', error.message);
+});

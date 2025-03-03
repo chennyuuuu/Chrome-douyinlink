@@ -56,11 +56,51 @@
     #exportBtn:hover {
       background-color: #1e2532;
     }
+    #feishuBtn {
+      background-color: #3370ff;
+      color: white;
+    }
+    #feishuBtn:hover {
+      background-color: #2860e1;
+    }
+    #configBtn {
+      background-color: #7a869a;
+      color: white;
+      margin-top: 10px;
+    }
+    #configBtn:hover {
+      background-color: #5e6c84;
+    }
     .status {
       font-size: 13px;
       color: #666;
       text-align: center;
       margin-top: 10px;
+    }
+    .config-status {
+      font-size: 12px;
+      padding: 5px 10px;
+      border-radius: 4px;
+      margin-top: 10px;
+      text-align: center;
+    }
+    .config-status.success {
+      background-color: #f6ffed;
+      border: 1px solid #b7eb8f;
+      color: #52c41a;
+    }
+    .config-status.warning {
+      background-color: #fffbe6;
+      border: 1px solid #ffe58f;
+      color: #faad14;
+    }
+    .config-status.error {
+      background-color: #fff2f0;
+      border: 1px solid #ffccc7;
+      color: #ff4d4f;
+    }
+    .hidden {
+      display: none;
     }
   </style>
 </head>
@@ -76,6 +116,8 @@
       <button id="feishuBtn" disabled>写入飞书</button>
     </div>
     <div class="status" id="status"></div>
+    <div class="config-status hidden" id="configStatus"></div>
+    <button id="configBtn">前往配置</button>
   </div>
   <script src="popup.js"></script>
 </body>

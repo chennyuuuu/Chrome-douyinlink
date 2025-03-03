@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>抖音视频链接提取器 - 配置</title>
+  <style>
+    body {
+      font-family: 'Microsoft YaHei', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f8f8f8;
+      color: #333;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      color: #ff4d4f;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    input[type="text"], input[type="password"] {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    .btn {
+      background-color: #ff4d4f;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .btn:hover {
+      background-color: #ff7875;
+    }
+    .btn:disabled {
+      background-color: #ffccc7;
+      cursor: not-allowed;
+    }
+    .status {
+      margin-top: 15px;
+      padding: 10px;
+      border-radius: 4px;
+    }
+    .success {
+      background-color: #f6ffed;
+      border: 1px solid #b7eb8f;
+      color: #52c41a;
+    }
+    .error {
+      background-color: #fff2f0;
+      border: 1px solid #ffccc7;
+      color: #ff4d4f;
+    }
+    .hidden {
+      display: none;
+    }
+    .section {
+      margin-bottom: 30px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 20px;
+    }
+    .section:last-child {
+      border-bottom: none;
+    }
+    .help-text {
+      font-size: 12px;
+      color: #888;
+      margin-top: 5px;
+    }
+    .test-btn {
+      background-color: #1890ff;
+      margin-left: 10px;
+    }
+    .test-btn:hover {
+      background-color: #40a9ff;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>飞书配置</h1>
+    
+    <div class="section">
+      <h2>飞书应用信息</h2>
+      <p>请填写您的飞书应用信息，用于将抖音视频数据写入飞书多维表格。</p>
+      
+      <div class="form-group">
+        <label for="appId">App ID</label>
+        <input type="text" id="appId" placeholder="请输入飞书应用的App ID">
+        <div class="help-text">在飞书开发者后台可以找到</div>
+      </div>
+      
+      <div class="form-group">
+        <label for="appSecret">App Secret</label>
+        <input type="password" id="appSecret" placeholder="请输入飞书应用的App Secret">
+        <div class="help-text">在飞书开发者后台可以找到</div>
+      </div>
+    </div>
+    
+    <div class="section">
+      <h2>多维表格配置</h2>
+      
+      <div class="form-group">
+        <label for="baseUrl">API基础URL</label>
+        <input type="text" id="baseUrl" placeholder="飞书API基础URL" value="https://open.feishu.cn/open-apis">
+        <div class="help-text">默认为飞书开放平台API地址</div>
+      </div>
+      
+      <div class="form-group">
+        <label for="appToken">多维表格AppToken</label>
+        <input type="text" id="appToken" placeholder="请输入多维表格的app_token">
+        <div class="help-text">在多维表格URL中获取，格式如：https://xxx.feishu.cn/base/[app_token]?table=[table_id]</div>
+      </div>
+      
+      <div class="form-group">
+        <label for="tableId">表格ID</label>
+        <input type="text" id="tableId" placeholder="请输入多维表格的table_id">
+        <div class="help-text">在多维表格URL中获取，格式如：https://xxx.feishu.cn/base/[app_token]?table=[table_id]</div>
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <button id="saveBtn" class="btn">保存配置</button>
+      <button id="testBtn" class="btn test-btn">测试连接</button>
+    </div>
+    
+    <div id="statusMessage" class="status hidden"></div>
+  </div>
+  
+  <script src="options.js"></script>
+</body>
+</html>

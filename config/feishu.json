@@ -16,10 +16,6 @@
       "点赞数": {
         "type": "number",
         "description": "视频点赞数字段，类型为数字"
-      },
-      "评论数": {
-        "type": "number",
-        "description": "视频评论数字段，类型为数字"
       }
     }
   }
